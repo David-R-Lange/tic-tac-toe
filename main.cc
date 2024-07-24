@@ -1,4 +1,6 @@
 #include <iostream>
+#include <cctype>
+#include <string>
 using namespace std;
 
 void drawBoard(char board[3][3]) {
@@ -28,6 +30,15 @@ bool checkWin(char board[3][3], char player) {
   return false;
 }
 
+bool isNumber(string s) {
+  for(int i = 0; i < s.length(); ++i) {
+    if( !isdigit( s[i] )) {
+      return false;
+    }
+  }
+  return true;
+}
+
 
 int main() {
   char board[3][3] = { { ' ', ' ', ' ' }, 
@@ -35,10 +46,11 @@ int main() {
                        { ' ', ' ', ' ' } };
 
   char player = 'X';
-  int row,col;
+  string rowInput,colInput;
+  unsigned int row, col;
   int turn;
 
-  cout << "Welcome to a simple terminal version of tic tac toe";
+  cout << "Welcome to a simple terminal version of tic tac toe\n";
 
   // Game Loop
   for(turn = 0; turn < 9; ++turn) {
@@ -46,17 +58,26 @@ int main() {
 
     while(true) {
       cout << "Player " << player << ", enter row (1-3) and column (1-3): ";
-      cin >> row >> col;
+      cin >> rowInput >> colInput;
 
-      if(board[row-1][col-1] != ' ' || row < 1 || row > 3 || col < 1 || col > 3) {
+      if(!isNumber(rowInput) || !isNumber(colInput)) {
+        cout << "Please enter only numbers" << endl;
+        continue;
+      }
+
+      row = stoul(rowInput) - 1;
+      col = stoul(colInput) - 1;
+
+
+      if(board[row % 3][col % 3 ] != ' ' || row > 9 || col > 9) {
         cout << "Invalid move. Try again\n";
+        continue;
       }
-      else {
-        break;
-      }
+
+      break;
     }
 
-    board[row-1][col-1] = player;
+    board[row % 3][col % 3] = player;
 
     if(checkWin(board, player)) {
       drawBoard(board);
@@ -69,7 +90,8 @@ int main() {
   }
   
   if(turn == 9 && !checkWin(board, 'X') && !checkWin(board, 'O')) {
-    cout << "It's a draw";
+    drawBoard(board);
+    cout << "It's a draw\n";
   }
 
   return 0;
