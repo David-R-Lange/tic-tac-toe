@@ -65,11 +65,10 @@ int main() {
         continue;
       }
 
-      row = stoul(rowInput) - 1;
-      col = stoul(colInput) - 1;
+      row = (stoul(rowInput) - 1) % 3;
+      col = (stoul(colInput) - 1) % 3;
 
-
-      if(board[row % 3][col % 3 ] != ' ' || row > 9 || col > 9) {
+      if(board[row][col] != ' ') {
         cout << "Invalid move. Try again\n";
         continue;
       }
@@ -77,7 +76,7 @@ int main() {
       break;
     }
 
-    board[row % 3][col % 3] = player;
+    board[row][col] = player;
 
     if(checkWin(board, player)) {
       drawBoard(board);
